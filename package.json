@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "supervisor ./bin/www",
+    "debug": "node --inspect --expose-gc ./bin/www",
     "test": "node ./bin/www"
   },
   "dependencies": {

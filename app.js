@@ -8,9 +8,9 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
-var app = express();
+var reqMiddleware = require('./utils/reqmiddleware');
 
-// var 
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,6 +25,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
+
+// app.use(reqMiddleware());
 
 app.use('/', routes);
 app.use('/users', users);
