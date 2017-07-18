@@ -4,6 +4,12 @@ const _ = require('underscore');
 // const path = require('path');
 // const logger = require('./showlog');
 
+const mysql = require('mysql');
+const dbConfig = require('../config/db.config');
+
+const pool = mysql.createPool(dbConfig);
+
+
 /**a
  * [middleware description]
  * @method middleware
@@ -18,49 +24,45 @@ function middleware(opts){
         _.extend(req.query, req.params);
         // var showLog = logger(req);
 
-        var resSend = res.send;
-        var resRender = res.render;
+        getConnection().then(connection => {
 
-        res.render = function(page, data, callback) {
-            // if(_.isFunction(data)) {
-            //     callback = data;
-            //     data = {};
-            // }
-            // if(!_.isFunction(callback)) {
-            //     callback = function() {};
-            // }
-            // data = _.extend(data, {root: ""})
-            resRender.call(res, page, data);
-            // showLog(data);
-        };
+            req.connection = connection;
+            
+            var send = res.send;
+            res.sendJSON = function(data) {
+
+                if ( data instanceof Error)
+                    data = formatError(data);
+                send.call(res, data);
+                // showLog(data);
+                connection.release();
+            };
+
+            next();
+        }).catch(err => {
+            res.send(formatError(err));
+        })
         
-        res.send = function(data) {
-
-            if ( data instanceof Error){
-                var e = data;
-                data = {
-                    code: -1,
-                    message: e.stack || e.message || e.toString,
-                    error: e
-                };
-            } else {
-                data = {
-                    code: 0,
-                    message: "",
-                    data: data || ""
-                }
-            }
-            resSend.call(res, data);
-            // showLog(data);
-        };
-        console.log('--------------------------------------------------------')
-        next();
     };
 }
 
-function verifUser(req, res) {
-    var cookies = req.cookies;
-    // return false;
+function getConnection() {
+    return new Promise((resolve, reject) => {
+        pool.getConnection((err, connection) => {
+            if(err)
+                reject(err);
+            else
+                resolve(connection);
+        })
+    });
+}
+
+function formatError(err) {
+    return {
+        code: -1,
+        message: err.stack || err.message || err.toString,
+        error: err
+    }
 }
 
 module.exports = middleware;
