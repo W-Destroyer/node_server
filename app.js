@@ -25,42 +25,16 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(express.static(path.join(__dirname, 'upload')));
+
+
 app.use(reqMiddleware());
 
 app.use('/', routes);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        // res.render('error', {
-        //     message: err.message,
-        //     error: err
-        // });
-        res.send('err')
-    });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    // res.render('error', {
-    //     message: err.message,
-    //     error: {}
-    // });
-    res.send('err')
-});
-
+app.use('/sysconfig', require('./routes/sysconfig'));
+app.use('/product', require('./routes/product'));
+app.use('/classify', require('./routes/classify'));
+app.use('/news', require('./routes/news'));
+app.use('*', require('./routes/error'));
 
 module.exports = app;

@@ -23,7 +23,7 @@ function middleware(opts){
         _.extend(req.query, req.body);
         _.extend(req.query, req.params);
         // var showLog = logger(req);
-
+        console.log(req.query);
         getConnection().then(connection => {
 
             req.connection = connection;

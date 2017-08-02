@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-var routeMiddleware = require('../utils/routemiddleware');
 var UserDao = require('../dao/dao_user');
 
 router.get('/add', (req, res, next) => {

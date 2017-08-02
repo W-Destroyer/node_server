@@ -1,4 +1,3 @@
-var pool = require('./db_connection');
 var sql = require('./sqlmap').user;
 
 
