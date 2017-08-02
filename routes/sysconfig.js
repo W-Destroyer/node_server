@@ -43,6 +43,16 @@ router.post('/saveFriendLink', (req, res) => {
     });
 })
 
+router.post('/delFriendLink', (req, res) => {
+    var data = req.body;
+    var sysConfigDao = SysConfigDao(req.connection);
+    sysConfigDao.delFriendLink(data).then(result => {
+        res.sendJSON(result);
+    }).catch(err => {
+        res.sendJSON(err);
+    })
+})
+
 router.get('/friendlink/listall', (req, res) => {
     var sysConfigDao = SysConfigDao(req.connection);
     sysConfigDao.listFriendLink().then(result => {

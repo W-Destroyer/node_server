@@ -11,8 +11,8 @@ const user = {
 const sysconfig = {
     insert:'INSERT INTO sh_sysconfig(s_type, s_name, s_value) VALUES(?,?,?);',
     update:'update sh_sysconfig set s_name=?, s_value=? where s_id=?;',
-    delete: 'DELETE FROM sh_sysconfig WHERE a_id=?;',
-    lastInsert: 'SELECT LAST_INSERT_ID()',
+    delete: 'DELETE FROM sh_sysconfig WHERE s_id=?;',
+    lastInsert: 'SELECT * FROM sh_sysconfig WHERE s_id=LAST_INSERT_ID()',
     queryById: 'SELECT * FROM sh_sysconfig WHERE s_id=?;',
     queryByType: 'select * from sh_sysconfig where s_type like ?;',
     queryAll: 'SELECT * FROM sh_sysconfig;'

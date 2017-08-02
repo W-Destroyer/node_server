@@ -65,7 +65,7 @@ class SysConfigDao {
 
     saveFriendLink(data) {
         return new Promise((resolve, reject) => {
-            if (data.id === -1) {
+            if (data.id == -1) {
                 this.connection.query(sysconfigSql.insert, ['friendLink', data.name, data.address], (err, result) => {
                     if (err instanceof Error)
                         return reject(err);
@@ -74,7 +74,7 @@ class SysConfigDao {
                             return reject(err);
                         resolve({
                             code: 0,
-                            data: result
+                            data: result[0]
                         })
                     })
     
@@ -94,6 +94,20 @@ class SysConfigDao {
                 })
             }
         })
+    }
+
+    delFriendLink(data) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(sysconfigSql.delete, [data.id], (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve({
+                    code: 0,
+                    data: '删除成功！'
+                })
+            })
+        })
+
     }
 
     listBanner(data) {
