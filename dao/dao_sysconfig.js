@@ -1,6 +1,5 @@
 var sysconfigSql = require('./sqlmap').sysconfig;
 
-
 class SysConfigDao {
     
     constructor(connection) {
@@ -23,7 +22,7 @@ class SysConfigDao {
 
     setCompanyName(data) {
         return this.getCompanyName().then(result => {
-            if (!result)
+            if (result.data === undefined)
                 return new Promise((resolve, reject) => {
                     this.connection.query(sysconfigSql.insert, ['basicinfo', 'companyName', data.companyName], (err, result) => {
                         if(err instanceof Error)
@@ -107,7 +106,6 @@ class SysConfigDao {
                 })
             })
         })
-
     }
 
     listBanner(data) {
