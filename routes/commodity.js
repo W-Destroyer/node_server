@@ -18,6 +18,8 @@ router.get('/listProduct', (req, res) => {
         length: req.query.length,
         type: req.query.type
     }
+    // console.log()
+    console.log(data)
     var productDao = ProductDao(req.connection);
     productDao.listProduct(data).then(result => {
         res.sendJSON(result);

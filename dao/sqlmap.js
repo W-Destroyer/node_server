@@ -21,16 +21,16 @@ const sysconfig = {
 const classify = {
     insert:'INSERT INTO sh_type(t_id, t_typename, t_desp, t_parentId) VALUES(0,?,?);',
     update:'update sh_type set a_userName=?, s_value=? where s_id=?;',
-    delete: 'DELETE FROM sh_type WHERE a_id=?;',
-    queryById: 'SELECT * FROM sh_type WHERE s_id=?;',
-    queryByName: 'select * from sh_type where s_name like ?;',
+    delete: 'DELETE FROM sh_type WHERE t_id=?;',
+    queryById: 'SELECT * FROM sh_type WHERE t_id=?;',
+    queryByName: 'select * from sh_type where t_name like ?;',
     queryAll: 'SELECT * FROM sh_type;'
 }
 
 const product = {
     queryByType: 'SELECT * FROM sh_products WHERE p_mintype=?;',
     queryById: 'SELECT * FROM sh_products WHERE p_id=?;',
-    queryAll: 'SELECT * FROM sh_products;'
+    queryAll: 'SELECT p_id,p_name,p_price,t_id,t_typename FROM sh_products left join sh_type on sh_products.p_mintype = sh_type.t_id;'
 }
 
 const news = {

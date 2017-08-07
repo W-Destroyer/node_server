@@ -7,4 +7,5 @@ const config = {
     password: '',
     database: 'node_shop'
 }
+
 module.exports = config;

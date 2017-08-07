@@ -14,7 +14,10 @@ class ClassifyDao {
                 console.log(err)
                 if(err instanceof Error)
                     return reject(err);
-                resolve(result);
+                resolve({
+                    code: 0,
+                    data: result
+                });
             });
         })
     }

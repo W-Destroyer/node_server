@@ -33,6 +33,7 @@ app.use(reqMiddleware());
 app.use('/', routes);
 app.use('/sysconfig', require('./routes/sysconfig'));
 app.use('/product', require('./routes/product'));
+app.use('/commodity', require('./routes/commodity'));
 app.use('/classify', require('./routes/classify'));
 app.use('/news', require('./routes/news'));
 app.use('*', require('./routes/error'));
