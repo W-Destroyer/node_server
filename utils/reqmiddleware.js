@@ -24,6 +24,14 @@ function middleware(opts){
         _.extend(req.query, req.params);
         // var showLog = logger(req);
         console.log(req.query);
+        if (isCommonApi(req)) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "X-Requested-With");
+            res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+            // res.header("X-Powered-By",' 3.2.1')
+            // res.header("Content-Type", "application/json;charset=utf-8");
+        }
+
         getConnection().then(connection => {
 
             req.connection = connection;
@@ -63,6 +71,13 @@ function formatError(err) {
         message: err.stack || err.message || err.toString,
         error: err
     }
+}
+
+function isCommonApi(req) {
+    // console.log(req)
+    if (req.url == '/upload/productImages')
+        return true
+    return false
 }
 
 module.exports = middleware;
