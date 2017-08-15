@@ -43,6 +43,27 @@ class ProductDao {
         })
     }
 
+    addProduct(data) {
+        var name = data.name;
+        var type = data.type.id;
+        var price = data.price;
+        var colors = JSON.stringify(data.colors);
+        var sizes = JSON.stringify(data.sizes);
+        var masterPic = JSON.stringify(data.masterPic);
+        var picture = JSON.stringify(data.productImages);
+        var describe = data.describe;
+        return new Promise((resolve, reject) => {
+            this.connection.query(productSql.insert, [name, type, price, colors, sizes, masterPic, picture, describe], (err, result) => {
+                if (err)
+                    return reject(err)
+                resolve({
+                    code: 0,
+                    data: '保存成功！'
+                })
+            })
+        })
+    }
+
     getDetail(data) {
         var productId = data.productId;
         console.log(productId)

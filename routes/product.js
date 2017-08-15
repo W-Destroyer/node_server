@@ -26,6 +26,17 @@ router.get('/listProduct', (req, res) => {
     })
 });
 
+router.post('/addProduct', (req, res) => {
+    var data = JSON.parse(req.body.data)
+    console.log(data)
+    var productDao = ProductDao(req.connection);
+    productDao.addProduct(data).then((result) => {
+        res.sendJSON(result);
+    }).catch(err => {
+        res.sendJSON(err);
+    });
+})
+
 router.get('/getdetail', (req, res) => {
     var data = {
         productId: req.query.productId
