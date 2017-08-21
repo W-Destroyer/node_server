@@ -29,7 +29,7 @@ exports.product = {
     insert: 'INSERT INTO sh_products(p_name, p_mintype, p_price, p_colors, p_sizes, p_masterPic, p_picture, p_desp) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
     queryByType: 'SELECT * FROM sh_products WHERE p_mintype=?;',
     queryById: 'SELECT * FROM sh_products WHERE p_id=?;',
-    queryAll: 'SELECT p_id,p_name,p_price,t_id,t_typename FROM sh_products left join sh_type on sh_products.p_mintype = sh_type.t_id;'
+    queryAll: 'SELECT p_id,p_name,p_price,p_amount,t_id,t_typename,p_masterPic FROM sh_products left join sh_type on sh_products.p_mintype = sh_type.t_id;'
 }
 
 exports.news = {
