@@ -40,6 +40,7 @@ app.use('/commodity', require('./routes/commodity'));
 app.use('/classify', require('./routes/classify'));
 app.use('/news', require('./routes/news'));
 app.use('/upload', require('./routes/upload'));
+app.use('/user', require('./routes/user'));
 app.use('*', require('./routes/error'));
 
 module.exports = app;

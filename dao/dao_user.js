@@ -1,4 +1,4 @@
-var sql = require('./sqlmap').user;
+var userSql = require('./sqlmap').user;
 
 
 class UserDao {
@@ -7,12 +7,46 @@ class UserDao {
         this.connection = connection;
     }
 
+    login(data) {
+        var username = data.username;
+        var password = data.password;
+
+        return new Promise((resolve, reject) => {
+            this.connection.query(userSql.queryByName, [username], (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                if (!result.length)
+                    return reject(new Error('用户名或密码错误！'));
+                if (result[0]['a_password'] !== password)
+                    return reject(new Error('用户名或密码错误！'));
+                resolve();
+            })
+        })
+    }
+
+    setToken(data) {
+        var username = data.username;
+        var lastLoginTime = data.lastLoginTime;
+        var token = data.token;
+        return new Promise((resolve, reject) => {
+            this.connection.query(userSql.updateByName, [token, lastLoginTime, username], (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve();
+            })
+        })
+    }
+
+    getTokenByName(data) {
+        // var 
+    }
+
     add(data) {
 
         var userName = data.userName || 'zhang';
         var password = data.password || '1234567890';
         return new Promise((resolve, reject) => {
-            this.connection.query(sql.insert, [userName, password], function(err, result) {
+            this.connection.query(userSql.insert, [userName, password], function(err, result) {
                 if(err instanceof Error)
                     return reject(err);
                 resolve({
@@ -23,12 +57,12 @@ class UserDao {
         })
     }
 
-    delete(data, cb) {
+    delete(data) {
         var id = data.id;
         console.log(id);
-        console.log(sql.delete);
+        console.log(userSql.delete);
         return new Promise((resolve, reject) => {
-            this.connection.query(sql.delete, [id], function(err, result) {
+            this.connection.query(userSql.delete, [id], function(err, result) {
                 if(err instanceof Error)
                     return reject(err);
                 resolve({

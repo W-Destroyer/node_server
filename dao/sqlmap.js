@@ -1,8 +1,10 @@
 exports.user = {
     insert:'INSERT INTO sh_admin(a_id, a_userName, a_password) VALUES(0,?,?);',
     update:'update sh_admin set a_userName=?, s_value=? where s_id=?;',
+    updateByName: 'UPDATE sh_admin SET a_token=?, a_lastLoginTime=? WHERE a_userName=?',
     delete: 'DELETE FROM sh_admin WHERE a_id=?;',
     queryById: 'SELECT * FROM sh_admin WHERE a_id=?;',
+    queryByName: 'SELECT * FROM sh_admin WHERE a_userName=?',
     queryAll: 'SELECT * FROM sh_admin;'
 }
 
