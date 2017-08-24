@@ -37,7 +37,7 @@ class UserDao {
         })
     }
 
-    getTokenByName(username) {
+    getUserInfoByName(username) {
         // var username = data.username,
         return new Promise((resolve, reject) => {
             this.connection.query(userSql.queryByName, [username], (err, result) => {
