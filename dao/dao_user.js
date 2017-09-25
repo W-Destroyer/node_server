@@ -17,7 +17,7 @@ class UserDao {
                     return reject(err);
                 if (!result.length)
                     return reject(new Error('用户名或密码错误！'));
-                if (result[0]['a_password'] !== password)
+                if (result[0]['password'] !== password)
                     return reject(new Error('用户名或密码错误！'));
                 resolve();
             })

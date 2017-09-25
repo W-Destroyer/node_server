@@ -1,10 +1,88 @@
 var sysconfigSql = require('./sqlmap').sysconfig;
 var productSql = require('./sqlmap').product;
 
+var productORM = require('../orm/orm_product');
+
 class ProductDao {
     
     constructor(connection) {
         this.connection = connection;
+        this.SQL = {
+
+        }
+    }
+
+    list(data) {
+        var sql = productORM.list({
+            start: data.start,
+            length: data.length,
+            type: data.type
+        });
+
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if(err instanceof Error)
+                    return reject(err);
+                var total = result.length;
+                var productList = result.splice(data.start, data.length);
+                resolve({
+                    total: total,
+                    productList: productList
+                });
+            });
+        });
+    }
+
+    create(data) {
+        var sql = productORM.insert({
+            name: data.name,
+            type: data.type,
+            price: data.price,
+            colors: JSON.stringify(data.colors),
+            sizes: JSON.stringify(data.sizes),
+            masterPic: data.masterPic,
+            picture: JSON.stringify(data.productImages),
+            describe: data.describe
+        });
+
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err)
+                    return reject(err);
+                resolve();
+            })
+        });
+    }
+
+    update(data) {
+
+        return new Promise((resolve, reject) => {
+
+        });
+    }
+
+    delete(data) {
+        var sql = productORM.delete(data);
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve(result);
+            })
+        });
+    }
+
+    detail(data) {
+        var sql = productORM.detail({
+            productId: data.productId
+        })
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve(result[0]);
+            })
+        });
     }
 
     showCount() {

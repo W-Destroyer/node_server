@@ -58,10 +58,7 @@ router.post('/productImages', (req, res) => {
             }).then((result) => {
                 res.sendJSON({
                     code: 0,
-                    data: {
-                        id: result[0]['f_id'],
-                        path: result[0]['f_path'],
-                    }
+                    data: result[0]['path']
                 })
             }).catch(err => {
                 res.sendJSON(err);

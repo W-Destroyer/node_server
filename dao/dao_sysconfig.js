@@ -1,4 +1,5 @@
 var sysconfigSql = require('./sqlmap').sysconfig;
+var sysconfigORM = require('../orm/orm_sysconfig');
 
 class SysConfigDao {
     
@@ -6,111 +7,97 @@ class SysConfigDao {
         this.connection = connection;
     }
 
+    // 公司名称相关
     getCompanyName() {
+        var sql = sysconfigORM.queryCompanyName();
         return new Promise((resolve, reject) => {
-            this.connection.query(sysconfigSql.queryByType, ['basicinfo'], (err, result) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
                 if (err instanceof Error)
                     return reject(err);
-                var companyName = result.find(item => item['s_name'] == 'companyName');
-                resolve({
-                    code: 0,
-                    data: companyName
-                });
+                var companyName = result[0] ? result[0].value : '';
+                resolve(companyName);
             })
         })
     }
 
     setCompanyName(data) {
-        return this.getCompanyName().then(result => {
-            if (result.data === undefined)
-                return new Promise((resolve, reject) => {
-                    this.connection.query(sysconfigSql.insert, ['basicinfo', 'companyName', data.companyName], (err, result) => {
-                        if(err instanceof Error)
-                            reject(err);
-                        resolve({
-                            code: 0,
-                            data: data.companyName
-                        })
-                    })
-                });
-            return new Promise((resolve, reject) => {
-                var id = result['s_id'];
-                this.connection.query(sysconfigSql.update, ['companyName', data.companyName, id], (err, result) => {
-                    console.log(result)
-                    if(err instanceof Error)
-                        reject(err);
-                    resolve({
-                        code: 0,
-                        data: data.companyName
-                    })
-                })
-            });
+        var sql = sysconfigORM.updateCompanyName({
+            name: data.name
         });
-    }
 
-    listFriendLink(data) {
-        // var name = data.name
         return new Promise((resolve, reject) => {
-            this.connection.query(sysconfigSql.queryByType, ['friendLink'], (err, result) => {
-                if(err instanceof Error)
-                    return reject(err);
-                resolve({
-                    code: 0,
-                    data: result
-                });
-            });
-        })
-    }
-
-    saveFriendLink(data) {
-        return new Promise((resolve, reject) => {
-            if (data.id == -1) {
-                this.connection.query(sysconfigSql.insert, ['friendLink', data.name, data.address], (err, result) => {
-                    if (err instanceof Error)
-                        return reject(err);
-                    this.connection.query(sysconfigSql.lastInsert, (err, result) => {
-                        if(err instanceof Error)
-                            return reject(err);
-                        resolve({
-                            code: 0,
-                            data: result[0]
-                        })
-                    })
-    
-                })
-            } else {
-                this.connection.query(sysconfigSql.update, [data.name, data.address, data.id], (err, result) => {
-                    if (err instanceof Error)
-                        return reject(err);
-                    this.connection.query(sysconfigSql.queryById, [data.id], (err, result) => {
-                        if (err instanceof Error)
-                            return reject(err)
-                        resolve({
-                            code: 0,
-                            data: result[0]
-                        })
-                    });
-                })
-            }
-        })
-    }
-
-    delFriendLink(data) {
-        return new Promise((resolve, reject) => {
-            this.connection.query(sysconfigSql.delete, [data.id], (err, result) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
                 if (err instanceof Error)
                     return reject(err);
-                resolve({
-                    code: 0,
-                    data: '删除成功！'
-                })
+                resolve();
             })
         })
     }
 
-    listBanner(data) {
+    // 友情链接相关
+    listFriendLink(data) {
+
+        var sql = sysconfigORM.queryFriendLink();
         return new Promise((resolve, reject) => {
-            this.connection.query(sysconfigSql.queryByType, ['banner'], (err, result) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if(err instanceof Error)
+                    return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    createFriendLink(data) {
+        var sql = sysconfigORM.createFriendLink({
+            name: data.name,
+            value: data.value
+        });
+
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve();
+            });
+        })
+    }
+
+    updateFriendLink(data) {
+        var sql = sysconfigORM.updateFriendLink({
+            id: data.id,
+            name: data.name,
+            value: data.value
+        });
+
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve();
+            })
+        })
+    }
+
+    deleteFriendLink(data) {
+        var sql = sysconfigORM.deleteFriendLink({
+            id: data.id
+        });
+
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve();
+            })
+        })
+    }
+
+    // 轮播图 相关
+    listBanner(data) {
+        var sql = sysconfigORM.queryBanner(data);
+
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
                 if(err instanceof Error)
                     return reject(err);
                 resolve(result);
@@ -118,20 +105,40 @@ class SysConfigDao {
         })
     }
 
-    delete(data, cb) {
-        var id = data.id;
-        console.log(id);
-        console.log(sql.delete);
+    createBanner(data) {
+        var sql = sysocnfigORM.createBanner(data);
+
         return new Promise((resolve, reject) => {
-            this.connection.query(sql.delete, [id], function(err, result) {
-                if(err instanceof Error)
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
                     return reject(err);
-                resolve({
-                    code: 0,
-                    message: '删除成功！'
-                })
+                resolve()
             });
-        })
+        });
+    }
+
+    updateBanner(data) {
+        var sql = sysconfigORM.updateBanner(data);
+
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve();
+            });
+        });
+    }
+
+    deleteBanner(data) {
+        var sql = sysconfigORM.deleteBanner(data);
+
+        return new Promsie((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve();
+            });
+        });
     }
 }
 

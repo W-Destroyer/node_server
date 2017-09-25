@@ -1,40 +1,70 @@
 var classifySql = require('./sqlmap').classify;
-
+var classifyORM = require('../orm/orm_classify');
 
 class ClassifyDao {
     
     constructor(connection) {
         this.connection = connection;
+        
+        this.SQL = {
+
+        }
     }
 
-    list(data) {
+    listClassify(data) {
         // var name = data.name
+    
         return new Promise((resolve, reject) => {
-            this.connection.query(classifySql.queryAll, function(err, result) {
-                console.log(err)
+            this.connection.query(classifyORM.query(), function(err, result) {
                 if(err instanceof Error)
                     return reject(err);
-                resolve({
-                    code: 0,
-                    data: result
-                });
+                resolve(result);
             });
         })
     }
 
-    delete(data, cb) {
-        var id = data.id;
-        console.log(id);
-        console.log(sql.delete);
+    list(data) {
+        var sql = classifyORM.query();
+        console.log(sql)
         return new Promise((resolve, reject) => {
-            this.connection.query(sql.delete, [id], function(err, result) {
-                if(err instanceof Error)
+            this.connection.query(classifyORM.query(), (err, result) => {
+                if (err instanceof Error)
                     return reject(err);
-                resolve({
-                    code: 0,
-                    message: '删除成功！'
-                })
+                resolve(result);
+            })
+        })
+    }
+
+    create(data) {
+        var sql = classifyORM.insert(data);
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve(result);
+            })
+        })
+    }
+
+    update(data) {
+        var sql = classifyORM.update(data);
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve(result);
             });
+        })
+    }
+
+    delete(data) {
+        var sql = classifyORM.delete(data);
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql.statement, sql.data, (err, result) => {
+                if (err instanceof Error)
+                    return reject(err);
+                resolve(result);
+            })
         })
     }
 }

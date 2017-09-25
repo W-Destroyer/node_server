@@ -33,9 +33,7 @@ router.post('/login', (req, res) => {
                 token: token
             }
         });
-    }).catch(err => {
-        res.sendJSON(err);
-    });
+    }).catch(err => res.sendJSON(err));
 });
 
 router.get('/verifyLogin', (req, res) => {
@@ -46,15 +44,13 @@ router.get('/verifyLogin', (req, res) => {
 
         var userDao = UserDao(req.connection);
         userDao.getUserInfoByName(decoded.username).then(result => {
-            if (result['a_token'] === token)
+            if (result['token'] === token)
                 return res.sendJSON({
                     code: 0,
                     data: 'token is valid'
                 });
-            return res.sendJSON(new Error('invalid token'));
-        }).catch(err => {
-            res.sendJSON(err);
-        })
+            res.sendJSON(new Error('invalid token'));
+        }).catch(err => res.sendJSON(err))
     });
 });
 
@@ -66,19 +62,17 @@ router.get('/currentInfo', (req, res) => {
     var userDao = UserDao(req.connection);
     userDao.getUserInfoByName(username).then(result => {
         var userInfo = {
-            id: result['a_id'],
-            username: result['a_userName'],
-            nickname: result['a_nickname'],
-            lastLoginTime: result['a_lastLoginTime'],
-            userImg: result['a_userImg']
+            id: result.id,
+            username: result.userName,
+            nickname: result.nickname,
+            lastLoginTime: result.lastLoginTime,
+            userImg: result.userImg
         }
         res.sendJSON({
             code: 0,
             data: userInfo
         })
-    }).catch(err => {
-        res.sendJSON(err);
-    })
+    }).catch(err => res.sendJSON(err));
 })
 
 module.exports = router;

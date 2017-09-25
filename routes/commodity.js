@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const ProductDao = require('../dao/dao_product');
+const ClassifyDao = require('../dao/dao_classify');
 
 router.get('/showCount', (req, res) => {
     var productDao = ProductDao(req.connection);
@@ -9,7 +10,7 @@ router.get('/showCount', (req, res) => {
         res.sendJSON(result);
     }).catch(err => {
         res.sendJSON(err);
-    })
+    });
 });
 
 router.get('/listProduct', (req, res) => {
@@ -25,7 +26,7 @@ router.get('/listProduct', (req, res) => {
         res.sendJSON(result);
     }).catch(err => {
         res.sendJSON(err);
-    })
+    });
 });
 
 router.get('/getdetail', (req, res) => {
@@ -37,7 +38,19 @@ router.get('/getdetail', (req, res) => {
         res.sendJSON(result);
     }).catch(err => {
         res.sendJSON(err);
-    })
-})
+    });
+});
+
+router.get('/listClassify', (req, res) => {
+    var classifyDao = ClassifyDao(req.connection);
+    classifyDao.listClassify().then(result => {
+        res.sendJSON({
+            code: 0,
+            data: result
+        });
+    }).catch(err => {
+        res.sendJSON(err);
+    });
+});
 
 module.exports = router;

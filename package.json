@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "supervisor ./bin/www",
+    "start": "supervisor -i upload ./bin/www",
     "debug": "node --inspect --expose-gc ./bin/www",
     "test": "node ./bin/www"
   },

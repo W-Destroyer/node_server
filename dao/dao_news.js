@@ -16,7 +16,7 @@ class NewsDao {
                 console.log(err)
                 if(err instanceof Error)
                     return reject(err);
-                console.log(result)
+                // console.log(result)
                 resolve(result.splice(0, len));
             });
         })
@@ -27,10 +27,7 @@ class NewsDao {
             this.connection.query(newsSql.queryShowCount, ['config'], (err, result) => {
                 if(err instanceof Error)
                     return reject(err);
-                resolve({
-                    code: 0,
-                    data: result[0]['n_desc']
-                });
+                resolve(result[0]['n_desc']);
             })
         })
     }
